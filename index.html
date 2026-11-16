@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Outcomes Unit 1 & 2 Test Prep</title>
+    <style>
+        :root {
+            --primary: #4a90e2;
+            --bg: #f4f7f6;
+            --text: #333;
+            --card-bg: #fff;
+            --success: #4caf50;
+            --error: #f44336;
+            --hint-color: #9c27b0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 10px 0 20px;
+            color: var(--primary);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Containers */
+        .tab-content {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Flashcards */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 280px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .card-face span {
+            display: block; 
+            width: 100%;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: #e8f0fe;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button.action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.action-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            font-weight: 600;
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Practice */
+        .practice-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px 20px;
+            margin-bottom: 20px;
+        }
+
+        .sentence {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            padding: 10px 0; 
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        input.correct {
+            border-color: var(--success);
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        input.incorrect {
+            border-color: var(--error);
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .feedback.success { color: var(--success); }
+        .feedback.error { color: var(--error); }
+        
+        .hint-text {
+            color: var(--hint-color);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        .hint-desc {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: normal;
+        }
+
+        .practice-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .practice-actions button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .practice-actions button:active { opacity: 0.8; }
+
+        .btn-check { background: var(--primary); color: white; }
+        .btn-hint { background: var(--hint-color); color: white; }
+
+    </style>
+</head>
+<body>
+
+    <h1>Test Prep: Unit 1 & 2</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('flashcards')">Flashcards</button>
+        <button class="tab-btn" onclick="switchTab('practice')">Practice</button>
+    </div>
+
+    <!-- TAB 1: FLASHCARDS -->
+    <div id="flashcards" class="tab-content active">
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front">
+                    <span id="card-front-content">Loading...</span>
+                </div>
+                <div class="card-face card-back">
+                    <span id="card-back-content">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="action-btn" id="prev-btn" onclick="prevCard()">← Prev</button>
+            <span class="progress" id="card-progress">1 / 40</span>
+            <button class="action-btn" id="next-btn" onclick="nextCard()">Next →</button>
+        </div>
+    </div>
+
+    <!-- TAB 2: PRACTICE -->
+    <div id="practice" class="tab-content">
+        <div class="practice-card">
+            <div class="progress" id="practice-progress" style="margin-bottom: 15px; text-align: center;">1 / 40</div>
+            <div class="sentence" id="practice-sentence">
+                Loading...
+            </div>
+            <input type="text" id="practice-input" placeholder="Type the missing phrase..." autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+            <div class="feedback" id="practice-feedback"></div>
+        </div>
+
+        <div class="practice-actions">
+            <button class="btn-check" onclick="checkPracticeAnswer()">Check</button>
+            <button class="btn-hint" onclick="showHint()">Hint</button>
+        </div>
+
+        <div class="controls">
+            <button class="action-btn" id="prev-practice-btn" onclick="prevPracticeCard()">← Prev</button>
+            <span class="progress" id="practice-progress-bottom" style="text-align: center;">1 / 40</span>
+            <button class="action-btn" id="next-practice-btn" onclick="nextPracticeCard()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        const vocabularyData = [
+            // --- UNIT 1: WORK & JOBS ---
+            { phrase: "run a company", hint: "be in control of a business", sentence: "It is not easy to [run a company] in a difficult economy." },
+            { phrase: "work in a bank", hint: "place of work (preposition 'in')", sentence: "If you want to [work in a bank], you need to be good at maths." },
+            { phrase: "work on a project", hint: "focus effort on a task (preposition 'on')", sentence: "I cannot go out tonight because I need to [work on a project] for my boss." },
+            { phrase: "work experience", hint: "a period of training at a job", sentence: "Fiona is doing [work experience] in an office. She isn't getting paid." },
+            { phrase: "a part-time job", hint: "work for only part of the week", sentence: "I only work weekends because I have [a part-time job] at a local cafe." },
+            { phrase: "apply for a job", hint: "ask for a position at work", sentence: "You should update your CV and start to [apply for a job] before you graduate." },
+            { phrase: "employ staff", hint: "pay people to work for you", sentence: "The factory is expanding, so they need to [employ staff] next month." },
+            { phrase: "train staff", hint: "teach workers how to do a job", sentence: "Every new restaurant manager has to [train staff] on how to use the coffee machines." },
+            { phrase: "launch a product", hint: "introduce something new to the market", sentence: "The marketing team is planning to [launch a product] at the conference next week." },
+            { phrase: "sign a contract", hint: "write your name on an agreement", sentence: "You cannot officially start your new role until you read the terms and [sign a contract]." },
+            { phrase: "agree a contract", hint: "decide on terms together", sentence: "We need to discuss the details before we can [agree a contract] with the supplier." },
+            { phrase: "arrange a meeting", hint: "organize a time to talk", sentence: "Can you [arrange a meeting] with the sales manager for me on Tuesday?" },
+            { phrase: "attend a meeting", hint: "go to a planned event", sentence: "All employees have to [attend a meeting] on Friday morning at 9 AM." },
+            { phrase: "lose a job", hint: "no longer have employment", sentence: "He is very worried that he might [lose a job] if the company doesn't get more customers." },
+            { phrase: "do research", hint: "study to find new information", sentence: "Scientists often need to [do research] into new technologies to make cars safer." },
+            { phrase: "organise a conference", hint: "plan a big event", sentence: "It takes a lot of work to [organise a conference] for a large company." },
+            { phrase: "negotiate a deal", hint: "discuss to reach an agreement", sentence: "They are meeting today to [negotiate a deal] with an American multinational." },
+            { phrase: "install a bathroom", hint: "put in equipment/fixtures", sentence: "We need to hire a plumber to [install a bathroom] in the new office." },
+            { phrase: "give a talk", hint: "speak to an audience", sentence: "It is an honour to [give a talk] at this year's local history event." },
+            { phrase: "make an appointment", hint: "arrange a time to meet", sentence: "I had to call the receptionist to [make an appointment]." },
+            
+            // --- UNIT 2: SHOPPING & CLOTHES ---
+            { phrase: "a wide selection", hint: "a large variety", sentence: "The shop is huge and they have [a wide selection] of clothes to choose from." },
+            { phrase: "out of stock", hint: "not available to buy", sentence: "I wanted to buy those sandals, but they were [out of stock], so we ordered new ones." },
+            { phrase: "in stock", hint: "available to buy", sentence: "I just want to find out if they have this item [in stock] before I drive to the shop." },
+            { phrase: "pay a fee", hint: "give money for a service", sentence: "If you want express delivery, you have to [pay a fee]." },
+            { phrase: "a bargain", hint: "something bought cheaply", sentence: "The holiday is a real [bargain]. You can't get any other luxury holiday for this price." },
+            { phrase: "reduced in price", hint: "costs less than before", sentence: "All the clothes have been [reduced in price] because they're in the sale." },
+            { phrase: "get money back", hint: "receive a refund", sentence: "If the item is broken, you can [get money back] from the shop." },
+            { phrase: "take it back", hint: "return an item to a shop", sentence: "I didn't like the gift, so I had to [take it back] to the store." },
+            { phrase: "try on", hint: "put on clothes to see if they fit", sentence: "Excuse me, can I [try on] this dress in the fitting room before I buy it?" },
+            { phrase: "suits you", hint: "look attractive on a person", sentence: "You look lovely! That dress really [suits you]." },
+            { phrase: "fits me", hint: "be the right size", sentence: "The jacket [fits me] perfectly. It's exactly my size." },
+            { phrase: "wear", hint: "have clothes on your body", sentence: "You should [wear] a jacket to the interview." },
+            { phrase: "look good in", hint: "have a certain appearance", sentence: "I don't think I [look good in] yellow. It's not my colour." },
+            { phrase: "damaged", hint: "broken or harmed", sentence: "The books are completely [damaged] because of the rain." },
+            { phrase: "delivery charge", hint: "extra money to send a package", sentence: "We can bring the wardrobe to your door if you pay a small [delivery charge]." },
+            { phrase: "service charge", hint: "extra money for a service (like a waiter)", sentence: "The restaurant adds a 10% [service charge] to the bill." },
+            { phrase: "drop", hint: "let something fall from your hands", sentence: "Be careful with that glass, or you might [drop] it." },
+            { phrase: "a pair of", hint: "two things that go together (shoes)", sentence: "I need to buy [a pair of] new trainers for the gym." },
+            { phrase: "wait in a queue", hint: "stand in line", sentence: "The supermarket was so busy that we had to [wait in a queue] for nearly 30 minutes to pay." },
+            { phrase: "reliable", hint: "can be trusted to work well", sentence: "I always use this website because their service is very [reliable]; packages always arrive on time." }
+        ];
+
+        // --- TAB LOGIC ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabId === 'practice' && shuffledPracticeData.length === 0) {
+                initPractice();
+            }
+        }
+
+        // --- FLASHCARD LOGIC ---
+        let currentCardIndex = 0;
+        const cardElement = document.getElementById('flashcard');
+        const frontText = document.getElementById('card-front-content');
+        const backText = document.getElementById('card-back-content');
+        const progressText = document.getElementById('card-progress');
+
+        function renderCard() {
+            const data = vocabularyData[currentCardIndex];
+            frontText.textContent = data.phrase;
+            
+            const highlightedText = data.sentence.replace(/\[(.*?)\]/, `<strong style="color:var(--primary)">$1</strong>`);
+            backText.innerHTML = highlightedText;
+            
+            cardElement.classList.remove('flipped');
+            progressText.textContent = `${currentCardIndex + 1} / ${vocabularyData.length}`;
+            
+            document.getElementById('prev-btn').disabled = currentCardIndex === 0;
+            document.getElementById('next-btn').disabled = currentCardIndex === vocabularyData.length - 1;
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentCardIndex < vocabularyData.length - 1) {
+                currentCardIndex++;
+                renderCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                renderCard();
+            }
+        }
+
+        // --- PRACTICE LOGIC ---
+        let shuffledPracticeData = [];
+        let currentPracticeIndex = 0;
+        
+        const practiceSentence = document.getElementById('practice-sentence');
+        const practiceInput = document.getElementById('practice-input');
+        const practiceFeedback = document.getElementById('practice-feedback');
+        const practiceProgressTop = document.getElementById('practice-progress');
+        const practiceProgressBottom = document.getElementById('practice-progress-bottom');
+        const prevPracticeBtn = document.getElementById('prev-practice-btn');
+        const nextPracticeBtn = document.getElementById('next-practice-btn');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initPractice() {
+            shuffledPracticeData = shuffleArray([...vocabularyData]);
+            currentPracticeIndex = 0;
+            renderPracticeCard();
+        }
+
+        function renderPracticeCard() {
+            const item = shuffledPracticeData[currentPracticeIndex];
+            
+            const match = item.sentence.match(/\[(.*?)\]/);
+            const exactAnswer = match ? match[1] : item.phrase;
+            const sentenceWithBlank = item.sentence.replace(/\[(.*?)\]/, ' _____________ ');
+            
+            practiceSentence.innerHTML = sentenceWithBlank;
+            practiceInput.value = '';
+            practiceInput.className = '';
+            practiceInput.dataset.answer = exactAnswer;
+            practiceInput.focus();
+            
+            practiceFeedback.innerHTML = '';
+            practiceFeedback.className = 'feedback';
+            
+            const progressString = `${currentPracticeIndex + 1} / ${shuffledPracticeData.length}`;
+            practiceProgressTop.textContent = progressString;
+            practiceProgressBottom.textContent = progressString;
+            
+            prevPracticeBtn.disabled = currentPracticeIndex === 0;
+            nextPracticeBtn.disabled = currentPracticeIndex === shuffledPracticeData.length - 1;
+        }
+
+        function showHint() {
+            const item = shuffledPracticeData[currentPracticeIndex];
+            
+            // ИСПРАВЛЕНИЕ: Берем точный ответ из input, чтобы количество букв всегда совпадало
+            const answer = practiceInput.dataset.answer;
+            
+            const blanks = answer.split(' ').map(word => {
+                return word[0] + '_'.repeat(word.length - 1);
+            }).join(' ');
+            
+            practiceFeedback.innerHTML = `
+                <div class="hint-text">${blanks}</div>
+                <div class="hint-desc">(${item.hint})</div>
+            `;
+            practiceFeedback.className = "feedback"; 
+        }
+
+        function checkPracticeAnswer() {
+            const userAnswer = practiceInput.value.trim().toLowerCase().replace(/\s+/g, ' ');
+            const correctAnswer = practiceInput.dataset.answer.trim().toLowerCase().replace(/\s+/g, ' ');
+            
+            if (!userAnswer) return;
+
+            if (userAnswer === correctAnswer) {
+                practiceInput.classList.remove('incorrect');
+                practiceInput.classList.add('correct');
+                practiceFeedback.innerHTML = "Correct!";
+                practiceFeedback.className = "feedback success";
+            } else {
+                practiceInput.classList.remove('correct');
+                practiceInput.classList.add('incorrect');
+                practiceFeedback.innerHTML = "Try again.";
+                practiceFeedback.className = "feedback error";
+            }
+        }
+
+        function nextPracticeCard() {
+            if (currentPracticeIndex < shuffledPracticeData.length - 1) {
+                currentPracticeIndex++;
+                renderPracticeCard();
+            }
+        }
+
+        function prevPracticeCard() {
+            if (currentPracticeIndex > 0) {
+                currentPracticeIndex--;
+                renderPracticeCard();
+            }
+        }
+
+        practiceInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPracticeAnswer();
+            }
+        });
+
+        renderCard();
+
+    </script>
+</body>
+</html>
